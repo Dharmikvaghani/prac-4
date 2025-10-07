@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dynamic Portal Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f3f3f3;
+    }
+
+    /* FAQ styles */
+    .faq-item {
+      background: #fff;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-question {
+      padding: 15px;
+      background: #3498db;
+      color: white;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 15px;
+      background: #ecf0f1;
+      border-top: 1px solid #bdc3c7;
+    }
+
+    .faq-answer.active {
+      display: block;
+    }
+
+    /* Notification popup */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ff9f00;
+      padding: 15px;
+      border: 1px solid #999;
+      border-radius: 5px;
+      z-index: 999;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Slider styles */
+    .slider {
+      margin: 40px auto;
+      max-width: 600px;
+      height: 300px;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 300px;
+      background-size: cover;
+      background-position: center;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .controls {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .controls button {
+      padding: 10px 15px;
+      margin: 0 10px;
+      background-color: #3498db;
+      color: white;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .controls button:hover {
+      background-color: #2980b9;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Notification Popup -->
+  <div id="popup" class="popup">
+    🔔 New update: Check out the latest FAQs and slider content!
+    <button onclick="closePopup()">Close</button>
+  </div>
+
+  <!-- FAQ Section -->
+  <h2>📚 Frequently Asked Questions</h2>
+  <div id="faq-container"></div>
+
+  <!-- Slider -->
+  <h2>📸 Image/Text Slider</h2>
+  <div class="slider">
+    <div class="slides" id="slides">
+      <div class="slide" style="background-image: url('C:\Users\DHARMIK\OneDrive\Desktop\24CS046_Prac4-main\lone-tree.jpg');">Slide 1</div>
+      <div class="slide" style="background-image: url('C:\Users\DHARMIK\OneDrive\Desktop\24CS046_Prac4-main\pexels-pixabay-459203.jpg');">Slide 2</div>
+      <div class="slide" style="background-image: url('C:\Users\DHARMIK\OneDrive\Desktop\24CS046_Prac4-main\pexels-souvenirpixels-417074.jpg');">Slide 3</div>
+    </div>
+  </div>
+  <div class="controls">
+    <button onclick="prevSlide()">⬅️ Prev</button>
+    <button onclick="nextSlide()">➡️ Next</button>
+  </div>
+
+  <script>
+    // Popup logic
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById("popup").style.display = "block";
+      }, 1500);
+
+      loadFAQs(); // Load FAQ on page load
+    };
+
+    // FAQ data (static JSON)
+    const faqData = [
+      {
+        "question": "What is JavaScript?",
+        "answer": "JavaScript is a scripting language used to create dynamic content on websites."
+      },
+      {
+        "question": "How to toggle elements?",
+        "answer": "You can use classList.toggle() to show/hide elements dynamically."
+      },
+      {
+        "question": "What is DOM?",
+        "answer": "DOM stands for Document Object Model – it represents the structure of a web page."
+      }
+    ];
+
+    function loadFAQs() {
+      const container = document.getElementById("faq-container");
+      faqData.forEach((item, index) => {
+        const faqItem = document.createElement("div");
+        faqItem.className = "faq-item";
+
+        faqItem.innerHTML = `
+          <div class="faq-question" id="faq-${index}">${item.question}</div>
+          <div class="faq-answer">${item.answer}</div>
+        `;
+
+        container.appendChild(faqItem);
+      });
+
+      document.querySelectorAll(".faq-question").forEach(q => {
+        q.addEventListener("click", () => {
+          const answer = q.nextElementSibling;
+          answer.classList.toggle("active");
+        });
+      });
+    }
+
+    // Slider logic
+    let currentIndex = 0;
+    const slides = document.getElementById("slides");
+    const totalSlides = slides.children.length;
+
+    function showSlide(index) {
+      slides.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      showSlide(currentIndex);
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+      showSlide(currentIndex);
+    }
+
+    // Auto slide every 5 seconds
+    setInterval(nextSlide, 5000);
+  </script>
+</body>
+</html>
